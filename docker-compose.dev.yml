@@ -6,6 +6,8 @@ services:
       - ./backend:/app
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DB_CONNECTION_STRING=Server=db;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5182"]
 
   frontend:

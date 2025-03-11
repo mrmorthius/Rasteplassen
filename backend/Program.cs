@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Get connectionstring from .env
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                      builder.Configuration.GetConnectionString("DefaultConnection");
 
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
