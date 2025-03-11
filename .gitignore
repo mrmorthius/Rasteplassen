@@ -137,3 +137,6 @@ dist
 
 # .NET Core
 404: Not Found
+
+bin/
+obj/

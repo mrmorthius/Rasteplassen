@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      target: production
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
+
+  frontend:
+    build:
+      target: production
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped

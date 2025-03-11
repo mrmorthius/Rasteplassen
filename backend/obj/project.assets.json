@@ -470,19 +470,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/morten/.nuget/packages/": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/morten/Documents/Programmering/Rasteplassen/backend/backend.csproj",
+      "projectUniqueName": "/app/backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/morten/Documents/Programmering/Rasteplassen/backend/backend.csproj",
-      "packagesPath": "/Users/morten/.nuget/packages/",
-      "outputPath": "/Users/morten/Documents/Programmering/Rasteplassen/backend/obj/",
+      "projectPath": "/app/backend.csproj",
+      "packagesPath": "/root/.nuget/packages/",
+      "outputPath": "/app/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/morten/.nuget/NuGet/NuGet.Config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -540,7 +540,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
