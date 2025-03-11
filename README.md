@@ -3,6 +3,8 @@
 For utvikling bruk kommando:
 `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
 
+Miljøvariabler legges i fil .env
+
 Tilgjengelighet ved utvikling:
 
 - Backend (port 8080)
