@@ -1,0 +1,158 @@
+name: Manual Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag for this release"
+        required: true
+        default: "v1.0.0"
+      description:
+        description: "Deployment description"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push frontend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:production
+            ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:${{ github.event.inputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/frontend-rasteplass:production
+            ${{ secrets.DOCKERHUB_USERNAME }}/frontend-rasteplass:${{ github.event.inputs.version }}
+
+      - name: Build and push backend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:production
+            ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:${{ github.event.inputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend-rasteplass:production
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend-rasteplass:${{ github.event.inputs.version }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            # Access ECR
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+
+            # Pull new images
+            docker pull ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:production
+            docker pull ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:production
+
+            # Create .env file
+            cat > ~/.env <<EOF
+            MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+            MYSQL_USER=${{ secrets.MYSQL_USER }}
+            MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+            MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            EOF
+
+            #Create nginx.conf
+            mkdir -p ~/nginx
+            cat > ~/nginx/nginx.conf <<EOF
+            events {
+                worker_connections 1024;
+            }
+            http {
+                server {
+                    listen 80;
+                    
+                    location / {
+                        proxy_pass http://frontend:5173/;
+                        proxy_set_header Host \$host;
+                        proxy_set_header X-Real-IP \$remote_addr;
+                    }
+                    
+                    location /api/ {
+                        proxy_pass http://backend:5182/;
+                        proxy_set_header Host \$host;
+                        proxy_set_header X-Real-IP \$remote_addr;
+                    }
+                }
+            }
+            EOF
+
+            # Create docker-compose.yml
+            cat > ~/docker-compose.yml <<EOF
+            services:
+              nginx:
+                image: nginx:alpine
+                ports:
+                  - "80:80"
+                volumes:
+                  - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+                depends_on:
+                  - frontend
+                  - backend
+                restart: unless-stopped
+
+              backend:
+                image: ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:production
+                environment:
+                  - ASPNETCORE_ENVIRONMENT=Production
+                restart: unless-stopped
+
+              frontend:
+                image: ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:production
+                environment:
+                  - NODE_ENV=production
+                depends_on:
+                  - backend
+                restart: unless-stopped
+
+              db:
+                image: mysql:8.0
+                restart: always
+                environment:
+                  MYSQL_DATABASE: \${MYSQL_DATABASE}
+                  MYSQL_USER: \${MYSQL_USER}
+                  MYSQL_PASSWORD: \${MYSQL_PASSWORD}
+                  MYSQL_ROOT_PASSWORD: \${MYSQL_ROOT_PASSWORD}
+                volumes:
+                  - mysql-data:/var/lib/mysql
+                  - ./database/init:/docker-entrypoint-initdb.d
+
+            volumes:
+              mysql-data:
+            EOF
+
+            # Stopp and start docker-compose
+            cd ~
+            docker-compose --env-file .env down
+            docker-compose --env-file .env up -d

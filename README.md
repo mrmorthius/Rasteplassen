@@ -17,3 +17,18 @@ Frontend - React App med Vite
 Backend - .NET webapi
 
 - Installert Swagger for UI ved utvikling
+
+## Staging
+
+For staging - Pull ned siste versjon av master
+`docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build`
+
+## Produksjon
+
+For produksjon - Trigger i GitHub Actions:
+
+1. Gå til GitHub repository -> Actions
+2. Velg "Deploy to Production" workflow
+3. Klikk "Run workflow"
+4. Angi versjonsnummer og beskrivelse
+5. Klikk "Run workflow" for å starte deployment
