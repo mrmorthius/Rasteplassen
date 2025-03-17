@@ -41,26 +41,26 @@ jobs:
           cd backend
           # npm test eller pytest
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build and tag frontend Docker image
+      - name: Test frontend build
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
+          push: false
           load: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:test
+          tags: frontend-test:pr
 
-      - name: Build and tag backend Docker image
+      - name: Test backend build
         uses: docker/build-push-action@v4
         with:
           context: ./backend
+          push: false
           load: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:test
+          tags: backend-test:pr
+
+      - name: Check image sizes
+        run: |
+          echo "Frontend image size:"
+          docker image inspect frontend-test:pr --format='{{.Size}}' | awk '{print $1/1024/1024 " MB"}'
+
+          echo "Backend image size:"
+          docker image inspect backend-test:pr --format='{{.Size}}' | awk '{print $1/1024/1024 " MB"}'

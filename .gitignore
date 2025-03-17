@@ -138,6 +138,8 @@ dist
 # .NET Core
 404: Not Found
 
+backend/bin/
+backend/obj/
 bin/
 obj/
 
