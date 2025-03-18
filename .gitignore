@@ -136,11 +136,12 @@ dist
 .pnp.*
 
 # .NET Core
-404: Not Found
-
 backend/bin/
 backend/obj/
-bin/
-obj/
-
-.env
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.user
+*.vscode

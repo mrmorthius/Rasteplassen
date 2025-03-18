@@ -50,3 +50,12 @@ For produksjon - Trigger i GitHub Actions:
 3. Klikk "Run workflow"
 4. Angi versjonsnummer og beskrivelse
 5. Klikk "Run workflow" for å starte deployment
+
+## TRELLO - Kanban board
+
+Bruk av Trello som Kanban board for styring av oppgaver og gjøremål.
+
+## SIKKERHET
+
+Installert Fail2Ban for å hindre mer enn 5 påloggingsforsøk med SSH.
+SSH er deaktiver for bruk med passord.
