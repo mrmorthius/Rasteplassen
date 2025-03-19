@@ -25,7 +25,9 @@ function App() {
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
-      <h1 class="text-3xl font-bold underline text-yellow-500">Hello world!</h1>
+      <h1 class="text-3xl font-bold underline text-yellow-500">
+        Hello world Eirik!
+      </h1>
     </>
   );
 }
