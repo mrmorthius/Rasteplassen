@@ -1,49 +1,87 @@
 # Rasteplassen
 
-For utvikling bruk kommando:
-`docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
+## Utvikling
 
-Miljøvariabler legges i fil .env
+1. For utvikling bruk kommando:
+   `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
 
-Tilgjengelighet ved utvikling:
+2. Miljøvariabler legges i fil .env
 
-- Backend (port 8080)
-- Frontend (port 3000)
+   - Kopier innhold fra .env.example og tilpass
 
-Frontend - React App med Vite
+3. Ved kjøring av docker-compose for utvikling blir følgende porter tilgjenglig:
 
-- installert TailwindCSS for styling
+   - Backend : port 8080
+   - Frontend : port 3000
 
-Backend - .NET webapi
+4. Valg av teknologi
 
-- Installert Swagger for UI ved utvikling
+   - Frontend - React App med Vite
 
-### Pushe kode
+     - TailwindCSS for styling
 
-Ved arbeid opprett en ny branch med kommando
-`git checkout -b feature/funksjon`
+   - Backend - .NET webapi
+     - Swagger for UI ved utvikling
 
-Gjør endringer og commit
-`git add . `
-`git commit -m "feat(login): Added loginsystem"`
-`git push -u origin feature/funksjon`
+### Utvikling av funksjonalitet og pushing av kode
 
-Gå til GitHub i nettleser og inn i repository `Rasteplassen`
-Opprett ny pull request med `master` som base og `feature/funksjon` som compare.
+1. Ved arbeid med kodebase - opprett ny branch
 
-Når PR er opprettet kjøres workflows. Hvis tester og testbuild gjennomføres OK kan PR merges til master.
+   - Hent siste versjon fra repository
+     - Kommando `git pull`
+   - Kommando `git checkout -b feature/funksjon`
+
+2. Skriv kode og test at det fungerer
+3. Push kode i utviklingsbranch til repository på GitHub
+
+```bash
+    git add . # legger til endringer
+    git commit -m "feat(login): Added loginsystem"  # commit og legg til passende beskrivelse
+    git push -u origin feature/funksjon # push kode til repository
+```
+
+4. Opprett PR (Pull Request) på GitHub
+
+   - Bruk nettleser og gå til repository
+   - Opprett ny pull request med `master -> base` og `feature/funksjon -> compare`.
+
+5. Ved opprettelse av PR kjører GitHub Workflows
+
+   - Kode blir testet for å sjekke at frontend og backend kan bygges med Docker
+   - Eventuelle tester som blir skrevet kjøres for å sikre funksjonalitet
+   - Ved vellykket WorkFlow kan PR merges til `Master`
+   - Velg "Squash and merge" for å merge til `Master`
+
+6. Sletting av utviklingsbranch
+   - Det fremgår etter vellykket merge at utviklingsbranch kan slettes
+     - Velg å slette utviklingsbranch
+   - Slett branch på lokal PC
+     - Kommando `branch -d feature/funksjon`
+     - Slett referanse for branch til Github-repo med kommando `git fetch --prune`
+   - Synkroniser med GitHub - `git pull`
 
 ## Staging
 
 For staging - Pull ned siste versjon av master
-`docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build`
 
-Start med
-`docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+- `git pull`
+- Bygg lokale docker-images med:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+```
+
+- Start lokalt miljø med:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
 
 ## Produksjon
 
-For produksjon - Trigger i GitHub Actions:
+Etter lokalt staging kan endringer pushes til produksjon
+
+- For produksjon - Manuell deployment i GitHub Actions:
 
 1. Gå til GitHub repository -> Actions
 2. Velg "Deploy to Production" workflow
@@ -51,11 +89,20 @@ For produksjon - Trigger i GitHub Actions:
 4. Angi versjonsnummer og beskrivelse
 5. Klikk "Run workflow" for å starte deployment
 
-## TRELLO - Kanban board
+#### Produksjonsmiljø
+
+- Hostes på AWS med EC2
+- Domene rasteplass.eu
+
+  - Konfigurert til å peke til EC2-instans
+
+  ##### SIKKERHET
+
+  - Installert Fail2Ban for å hindre mer enn 5 påloggingsforsøk med SSH.
+  - Ved over 5 forsøk blir IP satt i arrest i 1 time.
+  - SSH er deaktiver for bruk med passord.
+
+## TRELLO - Arbeidsfordeling og samarbeid
 
 Bruk av Trello som Kanban board for styring av oppgaver og gjøremål.
-
-## SIKKERHET
-
-Installert Fail2Ban for å hindre mer enn 5 påloggingsforsøk med SSH.
-SSH er deaktiver for bruk med passord.
+Deltakere legges til i board og kan følge fremdrift og kommunisere vedrørende arbeidsrelaterte spørsmål.
