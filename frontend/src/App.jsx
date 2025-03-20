@@ -26,7 +26,7 @@ function App() {
         </p>
       </div>
       <h1 class="text-3xl font-bold underline text-yellow-500">
-        Hello world Eirik!
+        Hello world! EirikTest12345
       </h1>
     </>
   );
