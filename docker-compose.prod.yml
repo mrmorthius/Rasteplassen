@@ -4,6 +4,7 @@ services:
       target: production
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - DB_CONNECTION_STRING=Server=db;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
     restart: unless-stopped
 
   frontend:

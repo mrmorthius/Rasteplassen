@@ -1,24 +1,36 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.OpenApi;
+
+using backend.Data;
+using Microsoft.EntityFrameworkCore;
+using backend.Repositories;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Get connectionstring from .env
+
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                       builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDbContext<RasteplassDbContext>(options =>
+{
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
+    options.UseMySql(connectionString, serverVersion);
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
 builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
 {
