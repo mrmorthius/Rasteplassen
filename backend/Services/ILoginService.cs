@@ -6,7 +6,7 @@ using backend.Models;
 
 namespace backend.Services
 {
-    public interface IUserService
+    public interface ILoginService
     {
         IEnumerable<User> GetUsers();
         Task<User> CheckUser(string email, string password);

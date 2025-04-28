@@ -13,8 +13,9 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddDbContext<RasteplassDbContext>(options =>
 {

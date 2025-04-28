@@ -7,11 +7,11 @@ using backend.Models;
 
 namespace backend.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class LoginRepository : ILoginRepository
     {
         private readonly RasteplassDbContext _context;
 
-        public UserRepository(RasteplassDbContext context)
+        public LoginRepository(RasteplassDbContext context)
         {
             _context = context;
         }
