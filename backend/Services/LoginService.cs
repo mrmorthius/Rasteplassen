@@ -10,17 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
-    public class UserService : IUserService
+    public class LoginService : ILoginService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ILoginRepository _loginRepository;
+        private readonly IAuthService _authService;
 
-        public UserService(IUserRepository userRepository)
+        public LoginService(ILoginRepository loginRepository, IAuthService authService)
         {
-            _userRepository = userRepository;
+            _authService = authService;
+            _loginRepository = loginRepository;
         }
 
         // Check email and password
-        public IEnumerable<User> GetUsers() => _userRepository.GetUsers().ToList();
+        public IEnumerable<User> GetUsers() => _loginRepository.GetUsers().ToList();
         public async Task<User?> CheckUser(string email, string password)
         {
             // Check for missing input
@@ -28,7 +30,7 @@ namespace backend.Services
                 return null;
 
             // Check for valid user
-            var user = await _userRepository.GetUsers()
+            var user = await _loginRepository.GetUsers()
                 .FirstOrDefaultAsync(u => u.Email == email);
 
             // Return if no user
@@ -63,7 +65,8 @@ namespace backend.Services
 
         public string CreateToken(User user)
         {
-            return null;
+            var token = _authService.CreateToken(user);
+            return token;
         }
     }
 }

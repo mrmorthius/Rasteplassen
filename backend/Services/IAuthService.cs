@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 
-namespace backend.Repositories
+namespace backend.Services
 {
-    public interface IUserRepository
+    public interface IAuthService
     {
-        IQueryable<User> GetUsers();
+        string CreateToken(User user);
     }
 }
