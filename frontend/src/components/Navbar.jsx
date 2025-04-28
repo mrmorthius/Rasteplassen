@@ -26,12 +26,6 @@ function Navbar() {
           Home
         </Link>
         <Link
-          to="/register"
-          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
-        >
-          Register
-        </Link>
-        <Link
           to="/login"
           className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
         >
@@ -42,12 +36,6 @@ function Navbar() {
           className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
         >
           Admin
-        </Link>
-        <Link
-          to="/store"
-          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300"
-        >
-          Store
         </Link>
       </div>
     </nav>
