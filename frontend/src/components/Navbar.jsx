@@ -38,6 +38,12 @@ function Navbar() {
           Login
         </Link>
         <Link
+          to="/admin"
+          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
+        >
+          Admin
+        </Link>
+        <Link
           to="/store"
           className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300"
         >
