@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS api_log (
 -- Test Brukere
 INSERT INTO brukere (brukernavn, email, passord)
 VALUES 
-  ('testbruker1', 'test1@example.com', 'passord123'),
+  ('testbruker1', 'test1@example.com', '$2a$11$xChhTszAoKjouvDKJk4hlOp.iaKyszS.ZMWJpszxf7pF55r7ovCB.'),
   ('testbruker2', 'test2@example.com', 'passord456');
 
 -- Test Rasteplasser
