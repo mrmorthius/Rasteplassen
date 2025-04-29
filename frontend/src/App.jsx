@@ -42,20 +42,6 @@ function App() {
     <Router>
       <div className="app-container">
         <Navbar />
-        {/* <nav className="navbar">
-          <h1>Rasteplasser Norge</h1>
-          <div>
-            {isAuthenticated ? (
-              <>
-                <a href="/admin">Admin</a>
-                <button onClick={logout}>Logg ut</button>
-              </>
-            ) : (
-              <a href="/login">Logg inn</a>
-            )}
-          </div>
-        </nav> */}
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
