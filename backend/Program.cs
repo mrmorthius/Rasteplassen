@@ -15,14 +15,16 @@ var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING"
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRasteplassRepository, RasteplassRepository>();
+builder.Services.AddScoped<IRasteplassService, RasteplassService>();
 
 builder.Services.AddDbContext<RasteplassDbContext>(options =>
 {
     var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
     options.UseMySql(connectionString, serverVersion);
 });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
