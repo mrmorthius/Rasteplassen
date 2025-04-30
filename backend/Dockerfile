@@ -1,18 +1,20 @@
 # Utvikling
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS development
 WORKDIR /app
-COPY . ./
+COPY *.csproj ./
 RUN dotnet restore
+COPY . ./
 ENV ASPNETCORE_URLS="http://0.0.0.0:5182"
 CMD ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5182"]
 
 # Bygg
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
-COPY *.csproj ./
-RUN dotnet restore
+# Copy everything and restore properly
 COPY . ./
-RUN dotnet publish -c Release -o out --no-restore
+RUN dotnet restore
+# Then publish
+RUN dotnet publish -c Release -o out
 
 #Produksjon
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS production
