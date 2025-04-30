@@ -4,6 +4,8 @@ services:
       target: development
     volumes:
       - ./backend:/app
+      - /app/bin
+      - /app/obj
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - DB_CONNECTION_STRING=Server=db;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};

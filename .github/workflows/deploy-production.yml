@@ -44,6 +44,8 @@ jobs:
         with:
           context: ./frontend
           push: true
+          build-args: |
+            NODE_ENV=production
           tags: |
             ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:production
             ${{ steps.login-ecr.outputs.registry }}/frontend-rasteplass:${{ github.event.inputs.version }}
@@ -81,6 +83,9 @@ jobs:
             MYSQL_USER=${{ secrets.MYSQL_USER }}
             MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
             MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
+            JWT_KEY=${{ secrets.JWT_KEY }}
+            JWT_ISSUER=${{ secrets.JWT_ISSUER }}
+            JWT_AUDIENCE=${{ secrets.JWT_AUDIENCE }}
             EOF
 
             #Create nginx.conf
@@ -126,6 +131,11 @@ jobs:
                 image: ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:production
                 environment:
                   - ASPNETCORE_ENVIRONMENT=Production
+                  - DB_CONNECTION_STRING=Server=db;Database=\${MYSQL_DATABASE};User=\${MYSQL_USER};Password=\${MYSQL_PASSWORD};
+                  - JWT_KEY=\${JWT_KEY}
+                  - JWT_ISSUER=\${JWT_ISSUER}
+                  - JWT_AUDIENCE=\${JWT_AUDIENCE}
+                  - JWT_EXPIRES_MINUTES=180
                 restart: unless-stopped
 
               frontend:
