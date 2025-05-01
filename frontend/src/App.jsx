@@ -1,34 +1,66 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState(null);
+
+  // Kontroller om token er utstedt
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Funksjonalitet for å logge inn og lage token
+  const login = (authToken) => {
+    localStorage.setItem("token", authToken);
+    setToken(authToken);
+    setIsAuthenticated(true);
+  };
+
+  // Funksjonalitet for å slette token og logge ut
+  const logout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setIsAuthenticated(false);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app-container">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/login"
+            element={<Login login={login} isAuthenticated={isAuthenticated} />}
+          />
+          <Route
+            path="/admin"
+            element={
+              isAuthenticated ? (
+                <Admin token={token} logout={logout} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <h1 class="text-3xl font-bold underline text-yellow-500">
-        Hello world! EirikTest12345
-      </h1>
-    </>
+    </Router>
   );
 }
 
