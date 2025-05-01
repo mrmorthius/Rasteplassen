@@ -6,6 +6,11 @@ services:
       target: production
     ports:
       - "8080:5182"
+    environment:
+      - DB_CONNECTION_STRING=Server=db;Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+    depends_on:
+      - db  
+
 
   frontend:
     build:

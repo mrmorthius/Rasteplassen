@@ -31,6 +31,9 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IRasteplassRepository, RasteplassRepository>();
+builder.Services.AddScoped<IRasteplassService, RasteplassService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -40,6 +43,7 @@ builder.Services.AddDbContext<RasteplassDbContext>(options =>
     var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
     options.UseMySql(connectionString, serverVersion);
 });
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddAuthentication(options =>
 {
@@ -61,6 +65,7 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["JWT_KEY"]))
     };
 });
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
