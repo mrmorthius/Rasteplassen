@@ -7,7 +7,7 @@ namespace backend.Models
     public class Rasteplass
     {
         [Key]
-        public required int rasteplass_id { get; set; }
+        public int rasteplass_id { get; set; }
         public required int vegvesen_id { get; set; }
         public required string geo_kommune { get; set; }
         public required string geo_fylke { get; set; }
