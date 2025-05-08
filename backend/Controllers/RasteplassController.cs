@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -57,6 +58,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)
@@ -69,6 +71,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateRasteplass(int id, [FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ namespace backend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteRasteplass(int id)
         {
             _logger.LogInformation("Sletter rasteplass med ID {Id}: {Time}", id, DateTime.UtcNow);
