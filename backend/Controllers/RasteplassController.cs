@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -56,6 +57,7 @@ namespace backend.Controllers
             return Ok(rasteplasser);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
         {
@@ -68,6 +70,7 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(GetRasteplass), new { id = createdRasteplass.rasteplass_id }, createdRasteplass);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRasteplass(int id, [FromBody] Rasteplass rasteplass)
         {
@@ -86,6 +89,7 @@ namespace backend.Controllers
             return Ok(updatedRasteplass);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRasteplass(int id)
         {
