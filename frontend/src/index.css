@@ -4,7 +4,7 @@
   --color-navbar-gray: oklch(0.4 0.04 268.73);
   --color-navbar-orange: #ffbb6c;
  }
-
+ 
 .cursive {
   font-family: "Amatic SC", "cursive";
   font-weight: 700;
@@ -20,6 +20,11 @@
   font-size: 100px;
 }
 
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+}
+
 /*body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -33,3 +38,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+

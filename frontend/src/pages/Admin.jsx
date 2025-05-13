@@ -1,54 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import useValidateToken from "../hooks/useValidateToken";
 
 function Admin({ token, logout }) {
-  const [isValidated, setIsValidated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
-
-  console.log(token);
-  useEffect(() => {
-    if (!token) {
-      logout();
-      navigate("/login");
-    }
-    const checkToken = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/Login/validateJWT",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        // Vellykket innlogging
-        if (response.ok) {
-          const data = await response.json();
-          if (!data.authenticated) {
-            logout();
-            navigate("/login");
-          } else {
-            console.log({ data });
-            setIsValidated(true);
-            setIsLoading(false);
-          }
-        } else {
-          logout();
-          navigate("/login");
-        }
-      } catch (error) {
-        alert("Noe gikk galt ved valdiering");
-        console.error(error);
-        logout();
-        navigate("/login");
-      }
-    };
-
-    checkToken();
-  }, [token, navigate, logout]);
+  const { isValidated, isLoading } = useValidateToken(token, logout);
 
   const getRasteplasser = async () => {
     try {

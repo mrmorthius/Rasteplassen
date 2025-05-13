@@ -58,7 +58,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)
