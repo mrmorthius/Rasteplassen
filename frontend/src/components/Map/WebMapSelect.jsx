@@ -1,13 +1,25 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { Icon } from "leaflet";
 import markerIconPng from "/images/leaflet/marker-orange.png";
 import markerShadowPng from "/images/leaflet/marker-shadow.png";
-import ChangeView from "./ChangeView";
 
-export default function WebmapMini() {
-  const [lat, setLat] = useState(59.91197);
-  const [lng, setLng] = useState(10.754432);
+export default function WebmapSelect({ coordinates, setCoordinates }) {
+  console.log("Coordinates:", coordinates);
+  const [coords, setCoords] = useState(coordinates);
+
+  useEffect(() => {
+    setCoordinates(coords);
+  }, [coords, setCoordinates]);
+
+  function SetMarker() {
+    useMapEvents({
+      click(e) {
+        setCoords([e.latlng.lat, e.latlng.lng]);
+      },
+    });
+    return null;
+  }
 
   const customIcon = new Icon({
     iconUrl: markerIconPng,
@@ -17,9 +29,9 @@ export default function WebmapMini() {
   });
 
   return (
-    <div style={{ height: "450px", width: "450px" }}>
+    <div className="h-[450px] w-[450px]">
       <MapContainer
-        center={[lat, lng]}
+        center={coords}
         zoom={12}
         style={{ height: "100%", width: "100%" }}
       >
@@ -27,6 +39,8 @@ export default function WebmapMini() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
+        <SetMarker />
+        <Marker position={coords} icon={customIcon} />
       </MapContainer>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import WebmapSelect from "../components/Map/WebMapSelect";
+import { useNavigate } from "react-router-dom";
 
 function New() {
   const [name, setName] = useState("");
@@ -12,9 +13,9 @@ function New() {
   const [access, setAccess] = useState(false);
   const [county, setCounty] = useState("Akershus");
   const [municipality, setMunicipality] = useState("");
-  const [coords, setCoords] = useState("");
+  const [coordinates, setCoordinates] = useState([59.91197, 10.754432]);
   const [vegvesen, setVegvesen] = useState("");
-
+  const navigate = useNavigate();
   const countys = [
     "Akershus",
     "Oslo",
@@ -35,19 +36,36 @@ function New() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const formData = {
+    const rasteplass = {
       rasteplass_navn: name,
       rasteplass_type: type,
       rasteplass_informasjon: info,
       geo_fylke: county,
       geo_kommune: municipality,
       rasteplass_toalett: toilet,
-      rasteplass_avfall: trash,
-      rasteplass_tilgjengelighet: access,
+      rasteplass_renovasjon: trash,
+      rasteplass_tilgjengelig: access,
       rasteplass_vegvesen_id: vegvesen,
-      rasteplass_koordinater: coords,
+      rasteplass_lat: coordinates[0],
+      rasteplass_long: coordinates[1],
     };
-    console.log(formData);
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/Rasteplass/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rasteplass),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      navigate("/");
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
@@ -180,28 +198,42 @@ function New() {
                     Koordinater
                   </label>
                   <div className="mt-2">
-                    <input
-                      type="text"
-                      id="coordinates"
-                      placeholder="59.91197, 10.754432"
-                      required
-                      autoComplete="coordinates"
-                      value={coords}
-                      onChange={(e) => setCoords(e.target.value)}
-                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                    />
-                    <Popup
-                      trigger={
-                        <button className="px-2 py-3 bg-amber-50" type="button">
-                          Trigger
-                        </button>
-                      }
-                      position="left center"
-                    >
-                      <div className=" bg-white shadow-sm w-[450px] h-[450px]">
-                        <WebmapSelect />
-                      </div>
-                    </Popup>
+                    <div className="flex justify-between w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400  sm:text-sm/6">
+                      <div>{coordinates[0] + ", " + coordinates[1]}</div>
+                      <Popup
+                        trigger={
+                          <button type="button">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="24px"
+                              viewBox="0 -960 960 960"
+                              width="24px"
+                              fill="#434343"
+                            >
+                              <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33 0-56.5-23.5T360-320v-40L168-552q-3 18-5.5 36t-2.5 36q0 121 79.5 212T440-162Zm276-102q41-45 62.5-100.5T800-480q0-98-54.5-179T600-776v16q0 33-23.5 56.5T520-680h-80v80q0 17-11.5 28.5T400-560h-80v80h240q17 0 28.5 11.5T600-440v120h40q26 0 47 15.5t29 40.5Z" />
+                            </svg>
+                          </button>
+                        }
+                        position="center center"
+                      >
+                        {(close) => (
+                          <>
+                            <div className="bg-white shadow-lg w-[450px] h-[450px] relative">
+                              <button
+                                className="absolute top-2 right-2 bg-white rounded-full p-1 w-8 h-8 hover:bg-[#f0f0f0] shadow-md z-[401] cursor-pointer"
+                                onClick={close}
+                              >
+                                X
+                              </button>
+                              <WebmapSelect
+                                coordinates={coordinates}
+                                setCoordinates={setCoordinates}
+                              />
+                            </div>
+                          </>
+                        )}
+                      </Popup>
+                    </div>
                   </div>
                 </div>
                 <div className="col-span-full">

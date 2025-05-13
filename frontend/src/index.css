@@ -25,6 +25,18 @@
   width: 100%;
 }
 
+.popup-content {
+  border: none !important;
+  box-shadow: none !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-100%, -50%) !important;
+}
+
+.popup-arrow {
+  display: none !important;
+}
 /*body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
