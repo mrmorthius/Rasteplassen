@@ -32,6 +32,8 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IRasteplassForslagRepository, RasteplassForslagRepository>();
+builder.Services.AddScoped<IRasteplassForslagService, RasteplassForslagService>();
 builder.Services.AddScoped<IRasteplassRepository, RasteplassRepository>();
 builder.Services.AddScoped<IRasteplassService, RasteplassService>();
 builder.Services.AddScoped<ILoginService, LoginService>();

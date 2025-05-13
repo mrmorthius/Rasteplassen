@@ -11,6 +11,7 @@ namespace backend.Data
     {
         public RasteplassDbContext(DbContextOptions<RasteplassDbContext> options) : base(options) { }
         public DbSet<Rasteplass> Rasteplasser { get; set; }
+        public DbSet<RasteplassForslag> RasteplasserForslag { get; set; }
         public DbSet<User> Brukere { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
