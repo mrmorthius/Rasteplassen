@@ -57,6 +57,7 @@ namespace backend.Controllers
             return Ok(rasteplasser);
         }
 
+        [Authorize]
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
@@ -70,6 +71,7 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(GetRasteplass), new { id = createdRasteplass.rasteplass_id }, createdRasteplass);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateRasteplass(int id, [FromBody] Rasteplass rasteplass)
@@ -89,6 +91,7 @@ namespace backend.Controllers
             return Ok(updatedRasteplass);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteRasteplass(int id)

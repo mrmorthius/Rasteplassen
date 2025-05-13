@@ -92,7 +92,7 @@ VALUES
 -- Test Forslag
 INSERT INTO rasteplasser_forslag (vegvesen_id, geo_kommune, geo_fylke, rasteplass_navn, rasteplass_type, rasteplass_lat, rasteplass_long, rasteplass_toalett, rasteplass_tilgjengelig, rasteplass_informasjon)
 VALUES
-  (NULL, 'Trondheim', 'Trøndelag', 'Trondheim Campingplass', 'Camping', 63.430515, 10.395053, 1, 1, 'Ny campingplass forslag.');
+  (10, 'Trondheim', 'Trøndelag', 'Trondheim Campingplass', 'Camping', 63.430515, 10.395053, 1, 1, 'Ny campingplass forslag.');
 
 -- Test Vurderinger
 INSERT INTO vurderinger (rasteplass_id, bruker_id, vurdering, kommentar)
