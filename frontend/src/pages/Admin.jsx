@@ -95,7 +95,7 @@ function Admin({ token, logout }) {
               >
                 <Link
                   className="flex p-4 mb-4"
-                  to={`/admin/rasteplass/${place.forslag_id}`}
+                  to={`/admin/new/rasteplass/${place.forslag_id}`}
                 >
                   <div className="flex flex-col">
                     <div className="px-4 sm:px-0">
@@ -111,6 +111,13 @@ function Admin({ token, logout }) {
                 </Link>
               </div>
             ))}{" "}
+          {!loading && places.length === 0 ? (
+            <div className="flex justify-center mb-10">
+              Ingen ventende forslag
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div className="flex flex-col justify-center mt-6">
             <div className="flex justify-center mb-4 cursor-pointer">
               <ReactPaginate

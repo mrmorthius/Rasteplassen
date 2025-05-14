@@ -18,7 +18,7 @@ function App() {
       setToken(storedToken);
       setIsAuthenticated(true);
     }
-    console.log("Consent:", consent);
+    // console.log("Consent:", consent);
   }, []);
 
   // Funksjonalitet for å logge inn og lage token

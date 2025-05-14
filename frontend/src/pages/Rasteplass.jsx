@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import usePlace from "../hooks/usePlace";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import WebMapMini from "../components/Map/WebMapMini";
 import usePlaceApi from "../hooks/usePlaceApi";
+import { changeUTF } from "../utils/utils";
 
 function Rasteplass({ isAuthenticated }) {
   const { slug } = useParams();
   const { place, loading } = usePlace(slug);
   const [time, setTime] = useState(null);
-  const { deletePlace, result } = usePlaceApi();
+  const { deletePlace } = usePlaceApi();
   const [showComments, setShowComments] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = async (id) => {
     if (window.confirm("Bekreft sletting av rasteplass")) {
       await deletePlace(id);
-      if (result.success === false) {
-        console.log(result.message);
-      }
+      navigate("/rasteplass");
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (place) {
       const formattedDate = new Date(place.oppdatert)
         .toLocaleString()
@@ -27,7 +27,7 @@ function Rasteplass({ isAuthenticated }) {
       setTime(formattedDate);
     }
   }, [place, setTime]);
-  console.log({ place });
+  // console.log({ place });
 
   return (
     <>
@@ -36,7 +36,7 @@ function Rasteplass({ isAuthenticated }) {
           {loading && <div>Loading...</div>}
           {!loading && place && (
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              {place.rasteplass_navn}
+              {changeUTF(place.rasteplass_navn)}
             </h1>
           )}
           {!loading && place === null && (
@@ -52,11 +52,11 @@ function Rasteplass({ isAuthenticated }) {
             <div className="flex flex-col">
               <div className="px-4 sm:px-0">
                 <h3 className="text-base/7 font-semibold text-gray-900">
-                  {place.rasteplass_informasjon}
+                  {changeUTF(place.rasteplass_informasjon)}
                 </h3>
                 <p className="mt-1 max-w-2xl text-sm/6 text-gray-500">
-                  Rasteplassen ligger i {place.geo_kommune} kommune (
-                  {place.geo_fylke} fylke).
+                  Rasteplassen ligger i {changeUTF(place.geo_kommune)} kommune (
+                  {changeUTF(place.geo_fylke)} fylke).
                 </p>
               </div>
               <div className="mt-6 border-t border-gray-100">
@@ -157,9 +157,12 @@ function Rasteplass({ isAuthenticated }) {
                 </button>
                 {isAuthenticated && (
                   <>
-                    <button className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer">
+                    <Link
+                      to={`/admin/edit/rasteplass/${place.rasteplass_id}`}
+                      className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
+                    >
                       Rediger Rasteplass
-                    </button>
+                    </Link>
                     <button
                       className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
                       onClick={() => handleDelete(slug)}

@@ -20,14 +20,15 @@ function usePlace(id) {
           `http://localhost:8080/api/Rasteplass/${id}`,
           {
             method: "GET",
+            headers: { Accept: "application/json; charset=utf-8" },
           }
         );
 
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
-
         const data = await response.json();
+        console.log(data);
         setPlace(data);
         setLoading(false);
       } catch (error) {

@@ -3,6 +3,7 @@ import usePlaces from "../hooks/usePlaces";
 import WebMapMini from "../components/Map/WebMapMini";
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import { changeUTF } from "../utils/utils";
 
 function RasteplassIndex() {
   const { places, loading } = usePlaces();
@@ -24,22 +25,29 @@ function RasteplassIndex() {
     if (selectedCounty) {
       filteredData = filteredData.filter(
         (element) =>
-          element.geo_fylke.toLowerCase() === selectedCounty.toLowerCase()
+          changeUTF(element.geo_fylke).toLowerCase() ===
+          selectedCounty.toLowerCase()
       );
     }
 
     if (search !== "") {
       filteredData = filteredData.filter((element) => {
         return (
-          element.rasteplass_navn
+          changeUTF(element.rasteplass_navn)
             .toLowerCase()
             .includes(search.toLowerCase()) ||
-          element.rasteplass_informasjon
+          changeUTF(element.rasteplass_informasjon)
             .toLowerCase()
             .includes(search.toLowerCase()) ||
-          element.geo_kommune.toLowerCase().includes(search.toLowerCase()) ||
-          element.geo_fylke.toLowerCase().includes(search.toLowerCase()) ||
-          element.rasteplass_type.toLowerCase().includes(search.toLowerCase())
+          changeUTF(element.geo_kommune)
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          changeUTF(element.geo_fylke)
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          changeUTF(element.rasteplass_type)
+            .toLowerCase()
+            .includes(search.toLowerCase())
         );
       });
     }
@@ -174,11 +182,13 @@ function RasteplassIndex() {
                 <div className="flex flex-col">
                   <div className="px-4 sm:px-0">
                     <h3 className="text-base/7 font-semibold text-gray-900">
-                      {place.rasteplass_navn} - {place.rasteplass_type}
+                      {changeUTF(place.rasteplass_navn)} -{" "}
+                      {changeUTF(place.rasteplass_type)}
                     </h3>
                     <p className="mt-1 max-w-2xl text-sm/6 text-gray-500">
                       {place.rasteplass_informasjon} Rasteplassen ligger i{" "}
-                      {place.geo_kommune} kommune ({place.geo_fylke} fylke).
+                      {changeUTF(place.geo_kommune)} kommune (
+                      {changeUTF(place.geo_fylke)} fylke).
                     </p>
                   </div>
                 </div>{" "}

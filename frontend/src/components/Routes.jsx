@@ -11,6 +11,7 @@ import RasteplassIndex from "../pages/RasteplassIndex";
 import About from "../pages/About";
 import New from "../pages/New";
 import ForslagRasteplass from "../pages/ForslagRasteplass";
+import RasteplassEdit from "../pages/RasteplassEdit";
 
 export default function RouterContainer({
   isAuthenticated,
@@ -48,11 +49,22 @@ export default function RouterContainer({
             }
           />
           <Route
-            path="/admin/rasteplass/:slug"
+            path="/admin/new/rasteplass/:slug"
             exact
             element={
               isAuthenticated ? (
                 <ForslagRasteplass token={token} logout={logout} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/admin/edit/rasteplass/:slug"
+            exact
+            element={
+              isAuthenticated ? (
+                <RasteplassEdit token={token} logout={logout} />
               ) : (
                 <Navigate to="/login" />
               )

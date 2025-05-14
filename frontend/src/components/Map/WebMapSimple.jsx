@@ -7,6 +7,7 @@ import personIconPng from "/images/leaflet/person-icon.png";
 import markerShadowPng from "/images/leaflet/marker-shadow.png";
 import ChangeView from "./ChangeView";
 import { Link } from "react-router-dom";
+import { changeUTF } from "../../utils/utils";
 
 export default function Webmap({ mapRef, consent, places }) {
   const { lat, setLat, lng, setLng } = useContext(LocationContext);
@@ -26,12 +27,6 @@ export default function Webmap({ mapRef, consent, places }) {
           setLat(position.coords.latitude);
           setLng(position.coords.longitude);
           setZoom(14);
-          console.log(
-            "Posisjon oppdatert:",
-            position.coords.latitude,
-            position.coords.longitude,
-            zoom
-          );
         },
         (error) => {
           console.error("Kunne ikke hente posisjon:", error);
@@ -78,7 +73,7 @@ export default function Webmap({ mapRef, consent, places }) {
         {places &&
           places.length > 0 &&
           places.map((place, index) => {
-            console.log(place);
+            // console.log(place);
             return (
               <Marker
                 key={index}
@@ -88,11 +83,11 @@ export default function Webmap({ mapRef, consent, places }) {
                 <Popup>
                   <div>
                     <h3 className="font-bold">
-                      {place.rasteplass_navn || "Rasteplass"}
+                      {changeUTF(place.rasteplass_navn) || "Rasteplass"}
                     </h3>
-                    {place.rasteplass_navn && (
+                    {changeUTF(place.rasteplass_navn) && (
                       <>
-                        <p>{place.rasteplass_informasjon}</p>
+                        <p>{changeUTF(place.rasteplass_informasjon)}</p>
                         <Link
                           to={`/rasteplass/${place.rasteplass_id}`}
                           className="flex items-center gap-1"

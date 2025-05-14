@@ -7,7 +7,7 @@ function useValidateToken(token, logout) {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  console.log(token);
+  // console.log(token);
   useEffect(() => {
     if (!token) {
       logout();

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import useProposalPlace from "../hooks/useProposalPlace";
+import usePlace from "../hooks/usePlace";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import WebMapMini from "../components/Map/WebMapMini";
 import WebmapSelect from "../components/Map/WebMapSelect";
-import useProposalApi from "../hooks/useProposalApi";
+import usePlaceApi from "../hooks/usePlaceApi";
 import useValidateToken from "../hooks/useValidateToken";
 import Popup from "reactjs-popup";
 
-function ForslagRasteplass({ token, logout }) {
+function RasteplassEdit({ token, logout }) {
   const { isValidated, isLoading } = useValidateToken(token, logout);
   const { slug } = useParams();
-  const { place, loading } = useProposalPlace(slug, token);
+  const { place, loading } = usePlace(slug, token);
   const [time, setTime] = useState(null);
-  const { deletePlace, updatePlace, acceptPlace, result } = useProposalApi();
+  const { deletePlace, updatePlace } = usePlaceApi();
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [info, setInfo] = useState("");
@@ -24,7 +24,6 @@ function ForslagRasteplass({ token, logout }) {
   const [coordinates, setCoordinates] = useState([0, 0]);
   const [vegvesen, setVegvesen] = useState(0);
   const navigate = useNavigate();
-
   const countys = [
     "Akershus",
     "Oslo",
@@ -69,9 +68,13 @@ function ForslagRasteplass({ token, logout }) {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    if (!name || !type || !county || !municipality) {
+      window.alert("Navn, type, fylke og kommune må være utfylt.");
+      return;
+    }
     if (window.confirm("Bekreft oppdatering av rasteplass")) {
       const rasteplass = {
-        forslag_id: slug,
+        rasteplass_id: place.rasteplass_id,
         rasteplass_navn: name,
         rasteplass_type: type,
         rasteplass_informasjon: info,
@@ -84,31 +87,13 @@ function ForslagRasteplass({ token, logout }) {
         rasteplass_lat: coordinates[0],
         rasteplass_long: coordinates[1],
       };
-
       await updatePlace(rasteplass);
-      if (result.success === false) {
-        // console.log(result.message);
-      }
+      navigate("/rasteplass");
     }
   };
 
   const handleDelete = async () => {
     if (window.confirm("Bekreft sletting av rasteplass")) {
-      await deletePlace(slug);
-      if (result.success === false) {
-        // console.log(result.message);
-      }
-      navigate("/admin");
-    }
-  };
-
-  const handleAccept = async () => {
-    if (!name || !type || !county || !municipality) {
-      window.alert("Navn, type, fylke og kommune må være utfylt.");
-      return;
-    }
-    if (window.confirm("Bekreft opprettelse av rasteplass")) {
-      await acceptPlace(slug);
       await deletePlace(slug);
       navigate("/admin");
     }
@@ -123,7 +108,7 @@ function ForslagRasteplass({ token, logout }) {
           <form onSubmit={(e) => handleUpdate(e)}>
             {!loading && place && (
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 ml-12">
-                Forslag - {name}{" "}
+                Rediger - {name}{" "}
                 <Popup
                   setName={setName}
                   trigger={
@@ -144,9 +129,9 @@ function ForslagRasteplass({ token, logout }) {
                 >
                   {(close) => (
                     <>
-                      <div className="bg-[#f9f9f9] shadow-2xl">
+                      <div className=" shadow-2xl w-100 flex gap-x-1">
                         <input
-                          className="pl-1"
+                          className="pl-1 w-90 bg-[#f9f9f9]"
                           type="text"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
@@ -158,7 +143,7 @@ function ForslagRasteplass({ token, logout }) {
                           }}
                         ></input>
                         <button
-                          className="absolute top-1 right-2 gap-x-2 p-1 w-12 h-3 text-xs z-[401] cursor-pointer"
+                          className="w-12 h-6 text-sm z-[401] bg-[#f9f9f9] border-2 rounded-2xl cursor-pointer"
                           onClick={close}
                         >
                           Lukk
@@ -207,9 +192,9 @@ function ForslagRasteplass({ token, logout }) {
                           >
                             {(close) => (
                               <>
-                                <div className="bg-[#f9f9f9] shadow-2xl">
+                                <div className="shadow-2xl w-100 flex gap-x-1">
                                   <input
-                                    className="pl-1"
+                                    className="bg-[#f9f9f9]  pl-1 w-90"
                                     type="text"
                                     value={info}
                                     onChange={(e) => setInfo(e.target.value)}
@@ -221,7 +206,7 @@ function ForslagRasteplass({ token, logout }) {
                                     }}
                                   ></input>
                                   <button
-                                    className="absolute top-2 right-2 gap-x-2 bg-[#f9f9f9] w-8 mr-3 text-xs z-[1401] cursor-pointer"
+                                    className="w-12 h-6 text-sm z-[401] bg-[#f9f9f9] border-2 rounded-2xl cursor-pointer"
                                     onClick={close}
                                   >
                                     Lukk
@@ -685,13 +670,6 @@ function ForslagRasteplass({ token, logout }) {
                       >
                         Slett Rasteplass
                       </button>
-                      <button
-                        type="button"
-                        className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
-                        onClick={() => handleAccept(slug)}
-                      >
-                        Godkjenn Rasteplass
-                      </button>
                     </div>
                   </div>
                   {place && coordinates ? (
@@ -715,4 +693,4 @@ function ForslagRasteplass({ token, logout }) {
   );
 }
 
-export default ForslagRasteplass;
+export default RasteplassEdit;
