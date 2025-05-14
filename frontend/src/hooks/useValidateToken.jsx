@@ -32,7 +32,6 @@ function useValidateToken(token, logout) {
             logout();
             navigate("/login");
           } else {
-            console.log({ data });
             setIsValidated(true);
             setIsLoading(false);
           }

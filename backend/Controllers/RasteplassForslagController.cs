@@ -13,7 +13,7 @@ namespace backend.Controllers
         private readonly IRasteplassForslagService _forslagService;
 
         public RasteplassForslagController(
-            ILogger<RasteplassForslagController> logger, 
+            ILogger<RasteplassForslagController> logger,
             IRasteplassForslagService forslagService)
         {
             _forslagService = forslagService;
@@ -51,12 +51,12 @@ namespace backend.Controllers
 
             // Hent IP-adresse fra request
             string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "ukjent";
-            
+
             _logger.LogInformation("Oppretter nytt rasteplassforslag: {Time}", DateTime.UtcNow);
             var createdForslag = await _forslagService.CreateForslagAsync(forslag, ipAddress);
 
-            return CreatedAtAction(nameof(GetForslag), 
-                new { id = createdForslag.forslag_id }, 
+            return CreatedAtAction(nameof(GetForslag),
+                new { id = createdForslag.forslag_id },
                 createdForslag);
         }
 
@@ -66,6 +66,27 @@ namespace backend.Controllers
         {
             _logger.LogInformation("Sletter rasteplassforslag med ID {Id}: {Time}", id, DateTime.UtcNow);
             var result = await _forslagService.DeleteForslagAsync(id);
+
+            if (!result)
+                return NotFound(new { message = $"Forslag med ID {id} ble ikke funnet" });
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateForslag(int id, [FromBody] RasteplassForslag forslag)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (id != forslag.forslag_id)
+                return BadRequest(new { message = "ID i URL matcher ikke ID i objektet" });
+
+            string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "ukjent";
+
+            _logger.LogInformation("Oppdaterer rasteplassforslag med ID {Id}: {Time}", id, DateTime.UtcNow);
+            var result = await _forslagService.UpdateForslagAsync(forslag, ipAddress);
 
             if (!result)
                 return NotFound(new { message = $"Forslag med ID {id} ble ikke funnet" });

@@ -141,7 +141,7 @@ function RasteplassIndex() {
               id="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="outline-none"
+              className="outline-none text-sm"
             ></input>
           </div>
         </div>

@@ -10,6 +10,7 @@ import Rasteplass from "../pages/Rasteplass";
 import RasteplassIndex from "../pages/RasteplassIndex";
 import About from "../pages/About";
 import New from "../pages/New";
+import ForslagRasteplass from "../pages/ForslagRasteplass";
 
 export default function RouterContainer({
   isAuthenticated,
@@ -23,7 +24,7 @@ export default function RouterContainer({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar isAuthenticated={isAuthenticated} />
+      <Navbar isAuthenticated={isAuthenticated} logout={logout} />
       <main className="flex-grow">
         <Routes location={location} key={location.pathname}>
           <Route
@@ -41,6 +42,17 @@ export default function RouterContainer({
             element={
               isAuthenticated ? (
                 <Admin token={token} logout={logout} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/admin/rasteplass/:slug"
+            exact
+            element={
+              isAuthenticated ? (
+                <ForslagRasteplass token={token} logout={logout} />
               ) : (
                 <Navigate to="/login" />
               )

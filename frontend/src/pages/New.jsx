@@ -16,6 +16,7 @@ function New() {
   const [coordinates, setCoordinates] = useState([59.91197, 10.754432]);
   const [vegvesen, setVegvesen] = useState("");
   const navigate = useNavigate();
+
   const countys = [
     "Akershus",
     "Oslo",
@@ -43,25 +44,27 @@ function New() {
       geo_fylke: county,
       geo_kommune: municipality,
       rasteplass_toalett: toilet,
-      rasteplass_renovasjon: trash,
+      rasteplass_renovasjon: trash ? "Ja" : "Nei",
       rasteplass_tilgjengelig: access,
-      rasteplass_vegvesen_id: vegvesen,
+      vegvesen_id: vegvesen ? vegvesen : 0,
       rasteplass_lat: coordinates[0],
       rasteplass_long: coordinates[1],
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/api/Rasteplass/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rasteplass),
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/RasteplassForslag/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(rasteplass),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
 
-      const data = await response.json();
       navigate("/");
     } catch (error) {
       console.error(error.message);

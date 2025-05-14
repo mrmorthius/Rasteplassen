@@ -32,6 +32,13 @@ namespace backend.Services
             return await _repository.CreateAsync(forslag, ipAddress);
         }
 
+        public async Task<bool> UpdateForslagAsync(RasteplassForslag forslag, string ipAddress)
+        {
+            _logger.LogInformation("Oppdaterer rasteplassforslag: {Navn}", forslag.rasteplass_navn);
+            return await _repository.UpdateForslagAsync(forslag, ipAddress);
+        }
+
+
         public async Task<bool> DeleteForslagAsync(int id)
         {
             _logger.LogInformation("Sletter rasteplassforslag med ID {Id}", id);
