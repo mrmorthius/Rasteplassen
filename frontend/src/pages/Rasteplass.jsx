@@ -9,6 +9,7 @@ function Rasteplass({ isAuthenticated }) {
   const { slug } = useParams();
   const { place, loading } = usePlace(slug);
   const [time, setTime] = useState(null);
+  const [posts, setPosts] = useState(null);
   const { deletePlace } = usePlaceApi();
   const [showComments, setShowComments] = useState(false);
   const navigate = useNavigate();
@@ -188,7 +189,12 @@ function Rasteplass({ isAuthenticated }) {
         )}
         {showComments && (
           <div className="bg-[#f9f9f9] flex justify-around rounded-lg p-4 mb-4">
-            Viser kommentarer
+            {posts &&
+              posts.map((post) => (
+                <>
+                  <div>{post.kommentar}</div>
+                </>
+              ))}
           </div>
         )}
       </main>
