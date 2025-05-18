@@ -36,6 +36,8 @@ builder.Services.AddScoped<IRasteplassForslagRepository, RasteplassForslagReposi
 builder.Services.AddScoped<IRasteplassForslagService, RasteplassForslagService>();
 builder.Services.AddScoped<IRasteplassRepository, RasteplassRepository>();
 builder.Services.AddScoped<IRasteplassService, RasteplassService>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();

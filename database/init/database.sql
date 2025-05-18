@@ -99,4 +99,4 @@ VALUES
 INSERT INTO vurderinger (rasteplass_id, bruker_id, vurdering, kommentar)
 VALUES
   (1, 1, 5, 'Fantastisk sted!'),
-  (2, 2, 4, 'Veldig fint, men kunne hatt flere søppelkasser.');
+  (2, 1, 4, 'Veldig fint, men kunne hatt flere søppelkasser.');

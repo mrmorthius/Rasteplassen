@@ -142,7 +142,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost("createHashedPassword")]
-    public async Task<IActionResult> Create([FromBody] string password)
+    public IActionResult Create([FromBody] string password)
     {
         if (!_environment.IsDevelopment())
         {

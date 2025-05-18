@@ -21,7 +21,7 @@ namespace backend.Repositories
             return await _context.RasteplasserForslag.ToListAsync();
         }
 
-        public async Task<RasteplassForslag> GetByIdAsync(int id)
+        public async Task<RasteplassForslag>? GetByIdAsync(int id)
         {
             return await _context.RasteplasserForslag.FindAsync(id);
         }

@@ -4,15 +4,25 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import WebMapMini from "../components/Map/WebMapMini";
 import usePlaceApi from "../hooks/usePlaceApi";
 import { changeUTF } from "../utils/utils";
+import useRating from "../hooks/useRating";
+import StarRating from "../components/StarRating";
+import GoogleMap from "../components/GoogleMap";
+import Vegvesen from "../components/Vegvesen";
+import Comments from "../components/Comments/Comments";
+import Rating from "../components/Comments/Rating";
 
 function Rasteplass({ isAuthenticated }) {
   const { slug } = useParams();
   const { place, loading } = usePlace(slug);
+  const { deleteRating } = useRating();
   const [time, setTime] = useState(null);
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
   const { deletePlace } = usePlaceApi();
   const [showComments, setShowComments] = useState(false);
   const navigate = useNavigate();
+  const [percent, setPercent] = useState(0);
+  const [showLines, setShowLines] = useState(2);
+  const [giveRating, setGiveRating] = useState(false);
 
   const handleDelete = async (id) => {
     if (window.confirm("Bekreft sletting av rasteplass")) {
@@ -20,6 +30,14 @@ function Rasteplass({ isAuthenticated }) {
       navigate("/rasteplass");
     }
   };
+
+  const handleDeleteComment = async (id) => {
+    if (window.confirm("Bekreft sletting av rasteplass")) {
+      await deleteRating(id);
+      window.location.reload();
+    }
+  };
+
   useEffect(() => {
     if (place) {
       const formattedDate = new Date(place.oppdatert)
@@ -27,8 +45,23 @@ function Rasteplass({ isAuthenticated }) {
         .replace(",", "");
       setTime(formattedDate);
     }
-  }, [place, setTime]);
-  // console.log({ place });
+    if (place && place.ratings.length > 0) {
+      setPosts(place.ratings);
+      var totalRating = 0;
+      var count = 0;
+
+      place.ratings.forEach((rating) => {
+        if (rating.vurdering !== undefined && rating.vurdering !== null) {
+          totalRating += rating.vurdering;
+          count += 1;
+        }
+      });
+
+      var stars = count > 0 ? totalRating / count : 0;
+      var starPercent = (stars / 5) * 100;
+      setPercent(starPercent);
+    }
+  }, [place, percent, setTime]);
 
   return (
     <>
@@ -52,9 +85,12 @@ function Rasteplass({ isAuthenticated }) {
           <div className="bg-[#f9f9f9] flex justify-around rounded-lg p-4 mb-4 flex-wrap md:flex-nowrap">
             <div className="flex flex-col">
               <div className="px-4 sm:px-0">
-                <h3 className="text-base/7 font-semibold text-gray-900">
-                  {changeUTF(place.rasteplass_informasjon)}
-                </h3>
+                <div className="flex justify-between">
+                  <h3 className="text-base/7 font-semibold text-gray-900">
+                    {changeUTF(place.rasteplass_informasjon)}
+                  </h3>
+                  <StarRating percent={percent} />
+                </div>
                 <p className="mt-1 max-w-2xl text-sm/6 text-gray-500">
                   Rasteplassen ligger i {changeUTF(place.geo_kommune)} kommune (
                   {changeUTF(place.geo_fylke)} fylke).
@@ -86,51 +122,11 @@ function Rasteplass({ isAuthenticated }) {
                       {place.rasteplass_type}
                     </dd>
                   </div>
-                  {place.vegvesen_id && place.vegvesen_id !== null ? (
-                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm/6 font-medium text-gray-900">
-                        Vegvesenet
-                      </dt>
-                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                        <a
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                          target="_blank"
-                          href={
-                            "https://vegkart.atlas.vegvesen.no/?objektType=39&vegobjekt=" +
-                            place.vegvesen_id +
-                            "#kartlag:geodata/@600000,7162941,4/valgt:" +
-                            place.vegvesen_id +
-                            ":39"
-                          }
-                        >
-                          Lenke
-                        </a>
-                      </dd>
-                    </div>
-                  ) : null}
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm/6 font-medium text-gray-900">
-                      Google Maps - Vegbeskrivelse
-                    </dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      {place.rasteplass_lat && place.rasteplass_long ? (
-                        <a
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                          target="_blank"
-                          href={
-                            "https://www.google.com/maps/search/?api=1&query=" +
-                            place.rasteplass_lat +
-                            "," +
-                            place.rasteplass_long
-                          }
-                        >
-                          Lenke
-                        </a>
-                      ) : (
-                        "Ingen lenke funnet"
-                      )}
-                    </dd>
-                  </div>
+                  <Vegvesen vegvesen_id={place.vegvesen_id} />
+                  <GoogleMap
+                    latitude={place.rasteplass_lat}
+                    longitude={place.rasteplass_long}
+                  />
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm/6 font-medium text-gray-900">
                       Informasjon oppdatert
@@ -143,32 +139,47 @@ function Rasteplass({ isAuthenticated }) {
                   </div>
                 </dl>
               </div>
-              <div className="flex mt-6 gap-2">
+              <div className="flex flex-wrap mt-6 mb-2 gap-2">
                 <a
                   className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
                   href="mailto:test1@example.com"
                 >
-                  Rapporter Rasteplass
+                  Rapporter
                 </a>
-                <button
-                  className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
-                  onClick={() => setShowComments(!showComments)}
-                >
-                  {showComments ? "Skjul kommentarer" : "Vis kommentarer"}
-                </button>
+                {posts && posts.length > 0 && (
+                  <button
+                    className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
+                    onClick={() => {
+                      setShowComments(!showComments);
+                      setShowLines(2);
+                    }}
+                  >
+                    {showComments ? "Skjul kommentarer" : "Vis kommentarer"}
+                  </button>
+                )}
+                {!giveRating && (
+                  <button
+                    className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
+                    onClick={() => {
+                      setGiveRating(true);
+                    }}
+                  >
+                    Skriv vurdering
+                  </button>
+                )}
                 {isAuthenticated && (
                   <>
                     <Link
                       to={`/admin/edit/rasteplass/${place.rasteplass_id}`}
                       className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
                     >
-                      Rediger Rasteplass
+                      Rediger
                     </Link>
                     <button
                       className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
                       onClick={() => handleDelete(slug)}
                     >
-                      Slett Rasteplass
+                      Slett
                     </button>
                   </>
                 )}
@@ -187,16 +198,15 @@ function Rasteplass({ isAuthenticated }) {
             )}
           </div>
         )}
-        {showComments && (
-          <div className="bg-[#f9f9f9] flex justify-around rounded-lg p-4 mb-4">
-            {posts &&
-              posts.map((post) => (
-                <>
-                  <div>{post.kommentar}</div>
-                </>
-              ))}
-          </div>
-        )}
+        {giveRating && <Rating slug={slug} setGiveRating={setGiveRating} />}
+        <Comments
+          posts={posts}
+          showComments={showComments}
+          isAuthenticated={isAuthenticated}
+          handleDeleteComment={handleDeleteComment}
+          showLines={showLines}
+          setShowLines={setShowLines}
+        />
       </main>
     </>
   );

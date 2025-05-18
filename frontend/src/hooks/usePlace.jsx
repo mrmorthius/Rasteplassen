@@ -28,7 +28,7 @@ function usePlace(id) {
           throw new Error(`Error: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setPlace(data);
         setLoading(false);
       } catch (error) {
