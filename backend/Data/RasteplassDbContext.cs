@@ -13,6 +13,7 @@ namespace backend.Data
         public DbSet<Rasteplass> Rasteplasser { get; set; }
         public DbSet<RasteplassForslag> RasteplasserForslag { get; set; }
         public DbSet<User> Brukere { get; set; }
+        public DbSet<Rating> Rating { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

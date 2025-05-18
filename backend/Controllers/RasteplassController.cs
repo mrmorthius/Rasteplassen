@@ -59,6 +59,7 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpPost]
+        // [Authorize]
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)
@@ -72,6 +73,7 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateRasteplass(int id, [FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)
@@ -91,6 +93,7 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteRasteplass(int id)
         {
             _logger.LogInformation("Sletter rasteplass med ID {Id}: {Time}", id, DateTime.UtcNow);

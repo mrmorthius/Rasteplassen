@@ -1,44 +1,100 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ isAuthenticated, logout }) {
   return (
-    <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
-        <svg
-          className="fill-current h-8 w-8 mr-2"
-          width="54"
-          height="54"
-          viewBox="0 0 54 54"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M27 0C12.06 0 0 12.06 0 27c0 14.95 12.06 27 27 27 14.95 0 27-12.06 27-27 0-14.95-12.06-27-27-27zm0 45.32c-11.13 0-20.32-9.19-20.32-20.32 0-11.13 9.19-20.32 20.32-20.32 11.13 0 20.32 9.19 20.32 20.32 0 11.13-9.19 20.32-20.32 20.32z" />
-        </svg>
-        <span className="font-semibold text-xl tracking-tight">
-          Rasteplassen
-        </span>
+    <header className="bg-navbar-gray">
+      <div className="container mx-auto">
+        <nav className="flex justify-between items-center">
+          <div className="flex items-center">
+            <NavLink
+              to="/"
+              className="inline-flex items-center py-6 px-3 mr-4 text-white text-3xl tracking-widest hover:drop-shadow-[0px_0px_4px_rgba(0,0,0,1)]"
+            >
+              Rasteplass.eu
+            </NavLink>
+            <div className="flex">
+              <NavLink
+                to="/"
+                className={(navData) =>
+                  navData.isActive
+                    ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                    : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                }
+              >
+                Hjem
+              </NavLink>
+              <NavLink
+                to="/rasteplass"
+                className={(navData) =>
+                  navData.isActive
+                    ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                    : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                }
+              >
+                Rasteplasser
+              </NavLink>
+
+              <NavLink
+                to="/new"
+                className={(navData) =>
+                  navData.isActive
+                    ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                    : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                }
+              >
+                Forslag
+              </NavLink>
+
+              <NavLink
+                to="/about"
+                className={(navData) =>
+                  navData.isActive
+                    ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                    : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                }
+              >
+                Om oss
+              </NavLink>
+              {isAuthenticated && (
+                <NavLink
+                  to="/admin"
+                  className={(navData) =>
+                    navData.isActive
+                      ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                      : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                  }
+                >
+                  Admin
+                </NavLink>
+              )}
+            </div>
+          </div>
+          <div>
+            {isAuthenticated && (
+              <button
+                className="inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1] cursor-pointer"
+                onClick={() => logout()}
+              >
+                Logg ut
+              </button>
+            )}
+            {!isAuthenticated && (
+              <NavLink
+                to="/login"
+                className={(navData) =>
+                  navData.isActive
+                    ? "inline-flex items-center py-2 px-3 my-6 rounded text-black bg-[#ffbb6c] hover:text-black/30"
+                    : "inline-flex items-center py-2 px-3 my-6 rounded text-white hover:text-[#c0b8a1]"
+                }
+              >
+                Logg inn
+              </NavLink>
+            )}
+          </div>
+        </nav>
       </div>
-      <div className="flex items-center w-auto">
-        <Link
-          to="/"
-          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
-        >
-          Home
-        </Link>
-        <Link
-          to="/login"
-          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
-        >
-          Login
-        </Link>
-        <Link
-          to="/admin"
-          className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-gray-300 mr-4"
-        >
-          Admin
-        </Link>
-      </div>
-    </nav>
+    </header>
   );
 }
 

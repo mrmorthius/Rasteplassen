@@ -20,7 +20,7 @@ namespace backend.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Rasteplass> GetRasteplassByIdAsync(int id)
+        public async Task<Rasteplass?> GetRasteplassByIdAsync(int id)
         {
             _logger.LogInformation("Henter rasteplass med ID {Id}", id);
             return await _repository.GetByIdAsync(id);
