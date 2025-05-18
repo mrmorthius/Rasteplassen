@@ -104,5 +104,11 @@ namespace backend.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("test-exception")]
+        public IActionResult TestException()
+        {
+            throw new Exception("Test av ExceptionHandlingMiddleware");
+        }
     }
 }

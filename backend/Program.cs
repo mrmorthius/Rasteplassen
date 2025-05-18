@@ -6,11 +6,34 @@ using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Serilog;
+using Serilog.Events;
+using Serilog.Context;
+using backend.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Get connectionstring from .env
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics", LogEventLevel.Fatal)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddleware", LogEventLevel.Fatal)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl", LogEventLevel.Fatal)
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "logs/rasteplass-.log",
+        rollingInterval: RollingInterval.Day,
+        restrictedToMinimumLevel: LogEventLevel.Information,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
+builder.Host.UseSerilog();
+
+// Get connectionstring from .env
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                       builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -68,10 +91,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddExceptionHandler<ExceptionHandlingMiddleware>();
+builder.Services.AddProblemDetails();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseMiddleware<LoggingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
