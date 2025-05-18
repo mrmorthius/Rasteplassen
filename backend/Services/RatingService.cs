@@ -14,7 +14,7 @@ namespace backend.Services
             _logger = logger;
         }
 
-        public async Task<Rating>? GetRatingById(int id)
+        public async Task<Rating?> GetRatingById(int id)
         {
             _logger.LogInformation($"Henter vurdering {id}");
             return await _repository.GetRatingById(id);

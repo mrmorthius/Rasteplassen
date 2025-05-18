@@ -38,7 +38,11 @@ export default function Rating({ slug, setGiveRating }) {
         <div className="flex w-full justify-between py-1.5">
           <div>
             <label className="text-sm text-gray-500 pl-2">Stjerner: </label>
-            <select className="text-gray-500 " defaultValue={5}>
+            <select
+              className="text-gray-500 "
+              defaultValue={5}
+              onChange={(e) => setStars(e.target.value)}
+            >
               <option value={1}>1</option>
               <option value={2}>2</option>
               <option value={3}>3</option>

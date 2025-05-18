@@ -9,7 +9,7 @@ namespace backend.Services
     public interface ILoginService
     {
         IEnumerable<User> GetUsers();
-        Task<User> CheckUser(string email, string password);
+        Task<User?> CheckUser(string email, string password);
         string CreateToken(User user);
         bool VerifyPassword(string password, string hashedPassword);
         string HashPassword(string password);
