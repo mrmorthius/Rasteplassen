@@ -59,7 +59,11 @@ namespace backend.Controllers
 
         [Authorize]
         [HttpPost]
+<<<<<<< HEAD
         [Authorize]
+=======
+        // [Authorize]
+>>>>>>> 80f652afcd82ad3a80fcb02a6b8503e8f4306ab2
         public async Task<IActionResult> CreateRasteplass([FromBody] Rasteplass rasteplass)
         {
             if (!ModelState.IsValid)

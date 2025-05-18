@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS api_log (
 -- Test Brukere
 INSERT INTO brukere (brukernavn, email, passord)
 VALUES 
-  ('testbruker1', 'test1@example.com', '$2a$11$xChhTszAoKjouvDKJk4hlOp.iaKyszS.ZMWJpszxf7pF55r7ovCB.'),
-  ('testbruker2', 'test2@example.com', 'passord456');
+  ('testbruker1', 'test1@example.com', '$2a$11$xChhTszAoKjouvDKJk4hlOp.iaKyszS.ZMWJpszxf7pF55r7ovCB.');
+-- Passord for testbruker: passord
 
 -- Test Rasteplasser
 INSERT INTO rasteplasser (vegvesen_id, geo_kommune, geo_fylke, rasteplass_navn, rasteplass_type, rasteplass_lat, rasteplass_long, rasteplass_toalett, rasteplass_tilgjengelig, rasteplass_informasjon, rasteplass_renovasjon)
@@ -90,12 +90,13 @@ VALUES
   (1002, 'Bergen', 'Vestland', 'Ulriken Rasteplass', 'Parkering', 60.382222, 5.332222, 1, 1, 'Rasteplass ved fjellet.', 'Ja');
 
 -- Test Forslag
-INSERT INTO rasteplasser_forslag (vegvesen_id, geo_kommune, geo_fylke, rasteplass_navn, rasteplass_type, rasteplass_lat, rasteplass_long, rasteplass_toalett, rasteplass_tilgjengelig, rasteplass_informasjon)
+INSERT INTO rasteplasser_forslag (vegvesen_id, geo_kommune, geo_fylke, rasteplass_navn, rasteplass_type, rasteplass_lat, rasteplass_long, rasteplass_toalett, rasteplass_tilgjengelig, rasteplass_informasjon, rasteplass_renovasjon)
 VALUES
-  (10, 'Trondheim', 'Trøndelag', 'Trondheim Campingplass', 'Camping', 63.430515, 10.395053, 1, 1, 'Ny campingplass forslag.');
+  (10, 'Drammen', 'Buskerud', 'Drammen Campingplass', 'Camping', 63.430515, 10.395053, 1, 1, 'Ny campingplass forslag.', 'Ja'),
+  (101, 'Trondheim', 'Trøndelag', 'Trondheim Campingplass', 'Camping', 63.331368, 10.355440, 1, 1, 'Ny campingplass forslag.', 'Ja');
 
 -- Test Vurderinger
 INSERT INTO vurderinger (rasteplass_id, bruker_id, vurdering, kommentar)
 VALUES
   (1, 1, 5, 'Fantastisk sted!'),
-  (2, 2, 4, 'Veldig fint, men kunne hatt flere søppelkasser.');
+  (2, 1, 4, 'Veldig fint, men kunne hatt flere søppelkasser.');

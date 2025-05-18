@@ -4,7 +4,7 @@
   --color-navbar-gray: oklch(0.4 0.04 268.73);
   --color-navbar-orange: #ffbb6c;
  }
-
+ 
 .cursive {
   font-family: "Amatic SC", "cursive";
   font-weight: 700;
@@ -18,6 +18,24 @@
 
 .home-name {
   font-size: 100px;
+}
+
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+}
+
+.popup-content {
+  border: none !important;
+  box-shadow: none !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-100%, -50%) !important;
+}
+
+.popup-arrow {
+  display: none !important;
 }
 
 /*body {
