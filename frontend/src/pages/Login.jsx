@@ -33,8 +33,12 @@ const Login = ({ login, isAuthenticated }) => {
         login(data.token);
         navigate("/admin");
       } else {
-        // Mislykket innlogging
-        alert("Feil brukernavn eller passord");
+        if (response.status === 429) {
+          alert("For mange forsøk.");
+        } else {
+          // Mislykket innlogging
+          alert("Feil brukernavn eller passord");
+        }
       }
     } catch (error) {
       alert("Noe gikk galt ved innlogging");
