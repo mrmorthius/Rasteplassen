@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using backend.Services;
 using backend.Models;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace backend.Controllers;
 
@@ -34,11 +35,15 @@ public class LoginController : ControllerBase
         return Ok(users);
     }
 
+    [EnableRateLimiting("fixed")]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Login request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        _logger.LogInformation("Innloggingsforsøk fra IP {IpAddress}", ipAddress);
 
         // Check email and password
         var user = await _loginService.CheckUser(request.Email, request.Password);
