@@ -160,6 +160,8 @@ jobs:
 
               backend:
                 image: ${{ steps.login-ecr.outputs.registry }}/backend-rasteplass:production
+                volumes:
+                  - ./logs:/app/logs
                 environment:
                   - ASPNETCORE_ENVIRONMENT=Production
                   - DB_CONNECTION_STRING=Server=db;Database=\${MYSQL_DATABASE};User=\${MYSQL_USER};Password=\${MYSQL_PASSWORD};
