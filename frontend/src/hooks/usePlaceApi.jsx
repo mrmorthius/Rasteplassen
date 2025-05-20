@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { apiUrl } from "../config";
+
 function usePlaceApi() {
   const [result, setResult] = useState(null);
 
@@ -24,17 +26,14 @@ function usePlaceApi() {
         throw new Error("Ingen token funnet");
       }
 
-      const response = await fetch(
-        `http://localhost:8080/api/Rasteplass/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/Rasteplass/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -61,15 +60,12 @@ function usePlaceApi() {
         throw new Error("Ingen token funnet");
       }
 
-      const response = await fetch(
-        `http://localhost:8080/api/Rasteplass/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/Rasteplass/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);

@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { apiUrl } from "../config";
+
 function usePlaces() {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,7 +10,7 @@ function usePlaces() {
   useEffect(() => {
     (async function () {
       try {
-        const response = await fetch("http://localhost:8080/api/Rasteplass", {
+        const response = await fetch(`${apiUrl}/api/Rasteplass`, {
           method: "GET",
         });
         const data = await response.json();

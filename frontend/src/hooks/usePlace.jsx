@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { apiUrl } from "../config";
+
 function usePlace(id) {
   const [place, setPlace] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,13 +18,10 @@ function usePlace(id) {
 
     async function getPlace() {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/Rasteplass/${id}`,
-          {
-            method: "GET",
-            headers: { Accept: "application/json; charset=utf-8" },
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/Rasteplass/${id}`, {
+          method: "GET",
+          headers: { Accept: "application/json; charset=utf-8" },
+        });
 
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);

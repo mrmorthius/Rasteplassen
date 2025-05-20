@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { apiUrl } from "../config";
+
 function useProposalApi() {
   const [result, setResult] = useState({ success: false, message: "" });
 
@@ -21,17 +23,14 @@ function useProposalApi() {
         throw new Error("Ingen token funnet");
       }
 
-      const response = await fetch(
-        `http://localhost:8080/api/RasteplassForslag/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/RasteplassForslag/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -55,15 +54,12 @@ function useProposalApi() {
         throw new Error("Ingen token funnet");
       }
 
-      const response = await fetch(
-        `http://localhost:8080/api/RasteplassForslag/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/RasteplassForslag/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -88,7 +84,7 @@ function useProposalApi() {
       }
 
       const response = await fetch(
-        `http://localhost:8080/api/RasteplassForslag/${id}/godkjenn`,
+        `${apiUrl}/api/RasteplassForslag/${id}/godkjenn`,
         {
           method: "POST",
           headers: {

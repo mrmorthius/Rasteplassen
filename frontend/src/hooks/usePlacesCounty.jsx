@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { apiUrl } from "../config";
+
 function usePlacesCounty(id) {
   const [countyPlaces, setCountyPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,12 +10,9 @@ function usePlacesCounty(id) {
   useEffect(() => {
     (async function (id) {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/Rasteplass/kommune/${id}`,
-          {
-            method: "GET",
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/Rasteplass/kommune/${id}`, {
+          method: "GET",
+        });
         const data = await response.json();
         setCountyPlaces(data);
         setLoading(false);
