@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { apiUrl } from "../config";
 
 function useRating() {
   const [result, setResult] = useState(null);
@@ -19,7 +20,7 @@ function useRating() {
         throw new Error("Ingen token funnet");
       }
 
-      const response = await fetch(`http://localhost:8080/api/Rating/${id}`, {
+      const response = await fetch(`${apiUrl}/api/Rating/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${storedToken}`,

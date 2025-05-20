@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { apiUrl } from "../config";
 
 function useProposalPlaces(token) {
   const [places, setPlaces] = useState([]);
@@ -9,15 +10,12 @@ function useProposalPlaces(token) {
   useEffect(() => {
     (async function () {
       try {
-        const response = await fetch(
-          "http://localhost:8080/api/RasteplassForslag",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/RasteplassForslag`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         setPlaces(data);
         setLoading(false);

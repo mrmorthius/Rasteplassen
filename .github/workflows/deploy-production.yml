@@ -132,7 +132,7 @@ jobs:
 
                     location /api/ {
                         limit_req zone=api_limit burst=5 nodelay;
-                        proxy_pass http://backend:5182/;
+                        proxy_pass http://backend:5182/api/;
                         proxy_set_header Host \$host;
                         proxy_set_header X-Real-IP \$remote_addr;
                         proxy_set_header X-Forwarded-Proto \$scheme;
