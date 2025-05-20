@@ -99,8 +99,8 @@ jobs:
                 default_type  application/octet-stream;
                 sendfile      on;
 
-                limit_req_zone $binary_remote_addr zone=api_limit:10m rate=3r/s;
-                limit_req_zone $binary_remote_addr zone=frontend_limit:10m rate=5r/s;
+                limit_req_zone \$binary_remote_addr zone=api_limit:10m rate=3r/s;
+                limit_req_zone \$binary_remote_addr zone=frontend_limit:10m rate=5r/s;
 
                 server {
                     listen 80;
