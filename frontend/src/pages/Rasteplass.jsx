@@ -80,7 +80,7 @@ function Rasteplass({ isAuthenticated }) {
           )}
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-5 pb-6 md:pb-0 sm:px-6 lg:px-8">
         {!loading && place != null && (
           <div className="bg-[#f9f9f9] flex justify-around rounded-lg p-4 mb-4 flex-wrap md:flex-nowrap">
             <div className="flex flex-col">
