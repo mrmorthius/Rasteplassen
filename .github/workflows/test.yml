@@ -12,34 +12,61 @@ jobs:
       id-token: write
       contents: read
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up testing environment for frontend
         run: |
           cd frontend
-          # Installer avhengigheter basert på prosjekttype
-          # For eksempel hvis det er Node.js:
-          # npm install
+          # No frontend tests yet - just verify structure exists
+          echo "Frontend directory exists"
 
       - name: Run frontend tests
         run: |
           cd frontend
-          # Kjør testene dine
-          # For eksempel:
-          # npm test
+          # No frontend tests configured yet
+          echo "Frontend tests skipped - not implemented"
 
       - name: Set up testing environment for backend
         run: |
           cd backend
-          # Installer avhengigheter
-          # npm install eller pip install -r requirements.txt
+          # Setup .NET environment
+          dotnet restore
 
       - name: Run backend tests
+        env:
+          DB_CONNECTION_STRING: "Server=127.0.0.1;Database=testdb;User=testuser;Password=testpass;"
         run: |
           cd backend
-          # npm test eller pytest
+          # Build backend
+          dotnet build --no-restore --configuration Release
+          
+          # Wait for MySQL to be ready
+          until mysql -h 127.0.0.1 -u testuser -ptestpass -e "SELECT 1" 2>/dev/null; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          
+          # Run all tests except stress tests
+          cd ../backend.Tests
+          dotnet test --no-build --configuration Release --filter "FullyQualifiedName!~Stress"
 
       - name: Test frontend build
         uses: docker/build-push-action@v4
