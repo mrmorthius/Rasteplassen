@@ -114,8 +114,8 @@ function RasteplassIndex() {
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center rounded-lg p-4 mb-4 gap-4">
-          <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row justify-between items-center rounded-lg p-4 mb-4 gap-4">
+          <div className="flex text-xs md:text-md gap-2">
             <button
               className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
               onClick={() => {
@@ -135,7 +135,7 @@ function RasteplassIndex() {
                 setShowAll(false);
               }}
             >
-              Velg etter fylke
+              Velg fylke
             </button>
           </div>
           <div className="flex rounded-xl bg-[#f9f9f9] px-3 py-1.5 gap-2.5 shadow-xs hover:bg-[#f0f0f0] focus-within:outline-1 focus-within:outline-offset-2 focus-within:outline-navbar-orange">

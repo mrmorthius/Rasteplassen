@@ -10,10 +10,11 @@ CMD ["npx", "vite", "--host", "0.0.0.0"]
 # Bygg
 FROM node:20-alpine AS build
 WORKDIR /app
+ARG MODE=production
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . ./
-RUN npm run build
+RUN npm run build -- --mode ${MODE}
 
 #Produksjon
 FROM nginx:alpine AS production

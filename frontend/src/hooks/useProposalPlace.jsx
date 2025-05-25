@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { apiUrl } from "../config";
+
 function useProposalPlace(id, token) {
   const [place, setPlace] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,15 +18,12 @@ function useProposalPlace(id, token) {
 
     async function getPlace() {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/RasteplassForslag/${id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/RasteplassForslag/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);

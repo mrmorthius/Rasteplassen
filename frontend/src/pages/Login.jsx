@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { apiUrl } from "../config";
 
 const Login = ({ login, isAuthenticated }) => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ const Login = ({ login, isAuthenticated }) => {
 
     try {
       // Sjekk bruker og passord mot API
-      const response = await fetch("http://localhost:8080/api/Login/login", {
+      const response = await fetch(`${apiUrl}/api/Login/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,8 +34,12 @@ const Login = ({ login, isAuthenticated }) => {
         login(data.token);
         navigate("/admin");
       } else {
-        // Mislykket innlogging
-        alert("Feil brukernavn eller passord");
+        if (response.status === 429) {
+          alert("For mange forsøk.");
+        } else {
+          // Mislykket innlogging
+          alert("Feil brukernavn eller passord");
+        }
       }
     } catch (error) {
       alert("Noe gikk galt ved innlogging");

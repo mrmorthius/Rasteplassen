@@ -403,8 +403,8 @@ function New() {
                 </fieldset>
               </div>
             </div>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm/6 text-gray-600 align-middle">
+            <div className="mt-4 flex flex-col md:flex-row  items-center justify-between">
+              <p className="text-sm/6 text-gray-600 align-middle pb-2 md:pb-0">
                 Vennligst ikke foreslå private områder som ikke er åpen for
                 allmenn trafikk.
               </p>

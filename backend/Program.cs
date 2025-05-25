@@ -10,6 +10,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Context;
 using backend.Middleware;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,22 +36,53 @@ builder.Host.UseSerilog();
 
 // Get connectionstring from .env
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
-                      builder.Configuration.GetConnectionString("DefaultConnection");
+                    builder.Configuration.GetConnectionString("DefaultConnection");
 
 var corsOrigins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>() ??
-                  new[] { "http://localhost:3000" };
+                new[] { "http://localhost:3000" };
 
-// Konfigurer CORS basert på verdiene fra appsettings
+// Configure CORS based on environment
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
         policy =>
         {
             policy.WithOrigins(corsOrigins)
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
+
+builder.Services.AddRateLimiter(options =>
+{
+
+    options.AddPolicy("fixed", HttpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            }
+        ));
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = (context, _) =>
+    {
+        Log.Warning($"{context.HttpContext.Request.Path} Rate limit exceeded for {context.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "ukjent"} - {DateTime.UtcNow}");
+        if (builder.Environment.IsDevelopment())
+        {
+            context.HttpContext.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:3000");
+        }
+        else
+        {
+            context.HttpContext.Response.Headers.Append("Access-Control-Allow-Origin", "rasteplass.eu");
+        }
+        return ValueTask.CompletedTask;
+    };
+});
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -116,7 +148,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("CorsPolicy");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public partial class Program { }
