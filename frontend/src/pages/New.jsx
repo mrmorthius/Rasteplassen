@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import WebmapSelect from "../components/Map/WebMapSelect";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config";
 
 function New() {
   const [name, setName] = useState("");
@@ -52,14 +53,11 @@ function New() {
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/RasteplassForslag/`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(rasteplass),
-        }
-      );
+      const response = await fetch(`${apiUrl}/api/RasteplassForslag`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rasteplass),
+      });
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);

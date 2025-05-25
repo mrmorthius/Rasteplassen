@@ -11,6 +11,7 @@ export default function Rating({ slug, setGiveRating }) {
       vurdering: stars,
       kommentar: comment,
     };
+    // Waiting to implement until reCAPTCHA is active
     console.log(data);
     // await createRating(data);
   };
@@ -59,6 +60,7 @@ export default function Rating({ slug, setGiveRating }) {
             </button>
             <button
               onClick={() => createData()}
+              disabled
               className="flex justify-center rounded-md bg-navbar-orange px-3 py-1.5 text-sm/6 font-semibold hover:text-black text-black/80 shadow-xs hover:bg-navbar-orange/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:navbar-gray cursor-pointer"
             >
               Send
