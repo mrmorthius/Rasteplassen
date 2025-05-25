@@ -6,7 +6,7 @@ function usePlaceApi() {
   const [result, setResult] = useState(null);
 
   async function updatePlace(data) {
-    console.log(data);
+    // console.log(data);
     if (!data) {
       const errorResult = { success: false, message: "Ingen data" };
       setResult(errorResult);
