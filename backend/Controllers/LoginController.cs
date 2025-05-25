@@ -26,6 +26,7 @@ public class LoginController : ControllerBase
         _environment = environment;
     }
 
+    [Authorize]
     [HttpGet("brukere")]
     public IActionResult GetUsers()
     {
