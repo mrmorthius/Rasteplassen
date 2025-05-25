@@ -1,6 +1,7 @@
 using Serilog;
 using ILogger = Serilog.ILogger;
 
+// random (fjern)
 namespace backend.Middleware
 {
     public class LoggingMiddleware
